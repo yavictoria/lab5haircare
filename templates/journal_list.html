@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="journal-page">
+  <div class="journal-header">
+    <h1 class="journal-title">Щоденник догляду</h1>
+    <a href="{% url 'journal_add' %}" class="btn-journal-add">Додати запис</a>
+  </div>
+
+  {% if entries %}
+    <div class="journal-entries">
+      {% for entry in entries %}
+        <article class="journal-entry-card">
+          <div class="journal-entry-meta">
+            <span class="journal-entry-type">{{ entry.get_entry_type_display }}</span>
+            <span class="journal-entry-date">{{ entry.date|date:"d.m.Y" }}</span>
+          </div>
+          {% if entry.notes %}
+            <p class="journal-entry-notes">{{ entry.notes|linebreaks }}</p>
+          {% endif %}
+          {% if entry.photo %}
+            <img src="{{ entry.photo.url }}" alt="Фото запису" class="journal-entry-photo">
+          {% endif %}
+          <div class="journal-entry-actions">
+            <a href="{% url 'journal_delete' entry.pk %}" class="btn-journal-delete">Видалити</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="journal-empty">
+      <p>Записів ще немає.</p>
+      <a href="{% url 'journal_add' %}" class="btn-journal-add">Додати перший запис</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

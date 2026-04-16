@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}ai-page{% endblock %}
+
+{% block content %}
+<div class="ai-layout">
+    
+    <aside class="ai-sidebar glass-card">
+        <h3 class="sidebar-title">Історія чатів</h3>
+        <div class="sidebar-menu">
+            {% regroup chat_history by created_at.date as grouped_chats %}
+            
+            {% for group in grouped_chats reversed %}
+                <a href="#date-{{ group.grouper|date:'Y-m-d' }}" class="sidebar-link">
+                    <i class="far fa-calendar-alt"></i>
+                    {{ group.grouper|date:"d E Y" }}
+                </a>
+            {% empty %}
+                <div class="sidebar-empty">Тут з'явиться історія твоїх розмов з Керою 🤎</div>
+            {% endfor %}
+        </div>
+    </aside>
+
+    <div class="ai-wrapper">
+        <div id="chat-window" class="ai-chat-window glass-card">
+            <div class="ai-row ai-message">
+                <div class="ai-avatar ai-icon">
+                    <i class="fas fa-sparkles"></i>
+                </div>
+                <div class="ai-text">
+                    <p>Привіт! Я HairCara (Кера) — твоя персональна AI-помічниця, але для тебе просто Кера ;). Я знаю, що у тебе <strong>{{ user.hairprofile.hair_type }}</strong> волосся. Чим можу допомогти сьогодні?</p>
+                </div>
+            </div>
+
+            {% for chat in chat_history %}
+                {% ifchanged chat.created_at.date %}
+                    <div class="chat-date-divider" id="date-{{ chat.created_at|date:'Y-m-d' }}">
+                        <span>{{ chat.created_at|date:"d E Y" }}</span>
+                    </div>
+                {% endifchanged %}
+
+                <div class="ai-row user-message">
+                    <div class="ai-avatar user-icon"><i class="fas fa-user"></i></div>
+                    <div class="ai-text"><p>{{ chat.user_text|linebreaksbr }}</p></div>
+                </div>
+                
+                <div class="ai-row ai-message">
+                    <div class="ai-avatar ai-icon"><i class="fas fa-sparkles"></i></div>
+                    <div class="ai-text"><p>{{ chat.ai_text|linebreaksbr }}</p></div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="ai-input-container">
+            <form id="chat-form" class="ai-input-box glass-card">
+                {% csrf_token %}
+                <textarea id="user-input" placeholder="Запитай про маски, олії або загальний догляд..." rows="1" required></textarea>
+                <button type="submit" id="send-btn" class="ai-send-btn">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+            </form>
+            <div class="ai-disclaimer">AI може помилятися. Завжди зважай на індивідуальні особливості.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const chatForm = document.getElementById('chat-form');
+    const chatWindow = document.getElementById('chat-window');
+    const userInput = document.getElementById('user-input');
+
+    userInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    userInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            chatForm.dispatchEvent(new Event('submit'));
+        }
+    });
+
+    chatForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        userInput.value = '';
+        userInput.style.height = 'auto';
+
+        const userHtml = `
+            <div class="ai-row user-message">
+                <div class="ai-avatar user-icon"><i class="fas fa-user"></i></div>
+                <div class="ai-text"><p>${message.replace(/\n/g, '<br>')}</p></div>
+            </div>
+        `;
+        chatWindow.insertAdjacentHTML('beforeend', userHtml);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        const loadingId = 'loading-' + Date.now();
+        const loadingHtml = `
+            <div class="ai-row ai-message" id="${loadingId}">
+                <div class="ai-avatar ai-icon"><i class="fas fa-spinner fa-spin"></i></div>
+                <div class="ai-text"><p>Аналізую...</p></div>
+            </div>
+        `;
+        chatWindow.insertAdjacentHTML('beforeend', loadingHtml);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        try {
+            const response = await fetch("{% url 'ai_assistant' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `message=${encodeURIComponent(message)}`
+            });
+            const data = await response.json();
+            
+            document.getElementById(loadingId).remove();
+            const formattedReply = data.reply.replace(/\n/g, '<br>');
+
+            const aiHtml = `
+                <div class="ai-row ai-message">
+                    <div class="ai-avatar ai-icon"><i class="fas fa-sparkles"></i></div>
+                    <div class="ai-text"><p>${formattedReply}</p></div>
+                </div>
+            `;
+            chatWindow.insertAdjacentHTML('beforeend', aiHtml);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        } catch (error) {
+            document.getElementById(loadingId).innerHTML = `
+                <div class="ai-avatar ai-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="ai-text"><p style="color: red;">Сталася помилка. Спробуй ще раз.</p></div>
+            `;
+        }
+    };
+
+    window.onload = function() {
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    };
+</script>
+{% endblock %}

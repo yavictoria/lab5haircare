@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-title">Зареєструватися</h1>
+    <p class="auth-subtitle">Створіть обліковий запис для догляду за волоссям</p>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="form-group">
+        <label class="form-label" for="id_username">{{ form.username.label }}</label>
+        <input type="text" name="username" id="id_username" class="form-control-custom {% if form.username.errors %}is-invalid{% endif %}" value="{{ form.username.value|default:'' }}" placeholder="Оберить унікальне ім'я" autofocus autocomplete="username" maxlength="150" required />
+        {% if form.username.errors %}
+          <div class="form-error">{{ form.username.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_password1">{{ form.password1.label }}</label>
+        <input type="password" name="password1" id="id_password1" class="form-control-custom {% if form.password1.errors %}is-invalid{% endif %}" placeholder="Введіть надійний пароль" autocomplete="new-password" required />
+        <div class="auth-hint">
+          <span>Мінімум 8 символів, поєднання літер та цифр. Уникайте простих паролів.</span>
+        </div>
+        {% if form.password1.errors %}
+          <div class="form-error">{{ form.password1.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_password2">{{ form.password2.label }}</label>
+        <input type="password" name="password2" id="id_password2" class="form-control-custom {% if form.password2.errors %}is-invalid{% endif %}" placeholder="Повторіть пароль для підтвердження" autocomplete="new-password" required />
+        {% if form.password2.errors %}
+          <div class="form-error">{{ form.password2.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn-cta">Зареєструватися</button>
+    </form>
+
+    <p class="auth-footer">
+      Вже маєте обліковий запис? <a href="{% url 'login' %}">Увійти</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

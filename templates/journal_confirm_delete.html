@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="journal-delete-page">
+  <div class="journal-delete-card">
+    <h2 class="journal-delete-title">Видалити запис</h2>
+    <p class="journal-delete-preview">
+      <strong>{{ entry.get_entry_type_display }}</strong> — {{ entry.date|date:"d.m.Y" }}<br>
+      {% if entry.notes %}{{ entry.notes|truncatewords:30 }}{% endif %}
+    </p>
+    <p class="journal-delete-confirm-text">Ви впевнені, що хочете видалити цей запис?</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="journal-delete-actions">
+        <button type="submit" class="btn-confirm-delete">Видалити</button>
+        <a href="{% url 'journal_list' %}" class="btn-journal-back">Скасувати</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

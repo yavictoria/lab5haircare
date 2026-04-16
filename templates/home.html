@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}landing-page{% endblock %}
+
+{% block content %}
+<div class="hero" id="hero-area">
+  {% include 'partials/parallax_bubbles.html' %}
+
+  <div class="hero-content">
+    <h1 class="hero-title">Привіт, {{ display_name }} — сьогодні подбаймо про твоє волосся.</h1>
+    <p class="hero-subtitle">Ось твої щоденні поради та швидкий доступ до догляду.</p>
+  </div>
+</div>
+
+<section class="landing-section tips-section" id="daily-tips">
+  <h2 class="section-title">Щоденні поради</h2>
+  <div class="tips-carousel">
+    <div class="swiper tips-swiper">
+      <div class="swiper-wrapper">
+        {% for tip in recommendations %}
+          <div class="swiper-slide">
+            <div class="tip-card">
+              <p>{{ tip }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </div>
+</section>
+
+<section class="landing-section features-section">
+  <h2 class="section-title">Можливості</h2>
+  <div class="features-grid">
+    <a href="{% url 'journal_list' %}" class="feature-card">
+      <svg class="feature-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8"/><path d="M8 11h8"/>
+      </svg>
+      <h3 class="feature-card-title">Щоденник</h3>
+      <p class="feature-card-desc">Записуй миття, маски та процедури — веди історію догляду за волоссям.</p>
+    </a>
+    <a href="{% url 'profile' %}" class="feature-card">
+      <svg class="feature-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+      <h3 class="feature-card-title">Профіль</h3>
+      <p class="feature-card-desc">Тип волосся, пористість, довжина — оновлюй дані для персональних порад.</p>
+    </a>
+  </div>
+</section>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="{% static 'js/home.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.tips-swiper', {
+      slidesPerView: 'auto',
+      centeredSlides: true,
+      spaceBetween: 24,
+      grabCursor: true,
+      loop: true,
+      pagination: { el: '.tips-swiper .swiper-pagination', clickable: true },
+      navigation: {
+        nextEl: '.tips-swiper .swiper-button-next',
+        prevEl: '.tips-swiper .swiper-button-prev',
+      },
+      autoplay: { delay: 5000, disableOnInteraction: false },
+      speed: 400,
+    });
+  });
+</script>
+{% endblock %}

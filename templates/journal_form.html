@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="journal-form-page">
+  <div class="journal-form-card">
+    <h2 class="journal-form-title">Новий запис</h2>
+
+    <form method="post" enctype="multipart/form-data" class="journal-form">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label" for="id_entry_type">{{ form.entry_type.label }}</label>
+        <select name="entry_type" id="id_entry_type" class="form-control-custom {% if form.entry_type.errors %}is-invalid{% endif %}">
+          {% for value, label in form.fields.entry_type.choices %}
+            <option value="{{ value }}" {% if form.entry_type.value == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.entry_type.errors %}
+          <div class="form-error">{{ form.entry_type.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_date">{{ form.date.label }}</label>
+        <input type="date" name="date" id="id_date" class="form-control-custom" value="{{ form.date.value|default:'' }}" {% if form.fields.date.required %}required{% endif %} />
+        {% if form.date.errors %}
+          <div class="form-error">{{ form.date.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_notes">{{ form.notes.label }}</label>
+        <textarea name="notes" id="id_notes" class="form-control-custom" rows="4" placeholder="Опис процедури або нотатки...">{{ form.notes.value|default:'' }}</textarea>
+        {% if form.notes.errors %}
+          <div class="form-error">{{ form.notes.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_photo">{{ form.photo.label }}</label>
+        <input type="file" name="photo" id="id_photo" class="form-control-custom" accept="image/*" />
+        {% if form.photo.errors %}
+          <div class="form-error">{{ form.photo.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn-cta">Зберегти</button>
+      <div class="journal-form-actions">
+        <a href="{% url 'journal_list' %}" class="btn-journal-back">Назад</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

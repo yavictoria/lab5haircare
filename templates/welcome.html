@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+
+{% block body_class %}landing-page welcome-landing{% endblock %}
+
+{% block content %}
+<div class="welcome-hero" id="hero-area">
+  {% include 'partials/parallax_bubbles.html' %}
+
+  <div class="welcome-hero-inner">
+    <h1 class="welcome-hero-title">Haircare App</h1>
+    <p class="welcome-hero-lead">
+      Персональний догляд за волоссям: профіль, щоденник процедур, щоденні поради та розумний AI-помічник — усе в одному спокійному, затишному просторі.
+    </p>
+    <div class="welcome-cta-stack">
+      <a href="{% url 'register' %}" class="welcome-btn-primary">Зареєструватися</a>
+      <a href="{% url 'login' %}" class="welcome-btn-outline">Увійти</a>
+      <div class="welcome-divider"><span>або</span></div>
+      <a href="{% provider_login_url 'google' %}" class="welcome-btn-google">
+        <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+          <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+          <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+        </svg>
+        Продовжити з Google
+      </a>
+    </div>
+  </div>
+</div>
+
+<section class="welcome-section-block">
+  <h2>Про додаток</h2>
+  <p class="welcome-intro">
+    Haircare App допомагає відстежувати стан волосся, планувати догляд і отримувати підказки під ваш тип волосся та звички. Інтерфейс у спокійних бежево-коричневих тонах — без зайвого шуму, лише корисні інструменти.
+  </p>
+</section>
+
+<section class="welcome-section-block">
+  <h2>Що ви можете робити</h2>
+  <div class="welcome-feature-grid">
+    <div class="welcome-feature-tile">
+      <h3>Профіль волосся</h3>
+      <p>Тип, довжина, пористість, ламкість, фарбування — збережіть дані один раз і отримуйте релевантні рекомендації на головній сторінці.</p>
+    </div>
+    <div class="welcome-feature-tile">
+      <h3>Щоденник догляду</h3>
+      <p>Фіксуйте миття, маски та інші процедури з датами, нотатками та фото — зручна історія того, що справді працює для вас.</p>
+    </div>
+    <div class="welcome-feature-tile">
+      <h3>Щоденні поради</h3>
+      <p>Після входу на головній з’являються персональні підказки у вигляді зручної каруселі — швидко переглянути й нічого не пропустити.</p>
+    </div>
+    <div class="welcome-feature-tile">
+      <h3>AI-помічник</h3>
+      <p>Поставте питання про догляд, склади або рутину — чат-асистент відповість у контексті вашого профілю та допоможе зорієнтуватися.</p>
+    </div>
+  </div>
+</section>
+
+<section class="welcome-section-block">
+  <h2>Відгуки користувачів</h2>
+  <p class="welcome-intro">Різні сценарії — однаково висока оцінка досвіду з додатком.</p>
+  <div class="welcome-reviews-grid">
+    <article class="welcome-review-card">
+      <div class="welcome-stars" aria-label="5 з 5 зірок">★★★★★</div>
+      <p class="welcome-review-text">«Нарешті веду маски й миття в одному місці — більше не шукаю нотатки в телефоні.»</p>
+      <p class="welcome-review-author">Олена</p>
+      <p class="welcome-review-context">Щоденник і нагадування про рутину</p>
+    </article>
+    <article class="welcome-review-card">
+      <div class="welcome-stars" aria-label="5 з 5 зірок">★★★★★</div>
+      <p class="welcome-review-text">«Поради на головній підлаштовані під моє кучеряве волосся — відчувається персонально.»</p>
+      <p class="welcome-review-author">Марія</p>
+      <p class="welcome-review-context">Персональні рекомендації після профілю</p>
+    </article>
+    <article class="welcome-review-card">
+      <div class="welcome-stars" aria-label="5 з 5 зірок">★★★★★</div>
+      <p class="welcome-review-text">«Питала в асистента про олії для кінчиків — відповідь була зрозумілою, без «води».»</p>
+      <p class="welcome-review-author">Катерина</p>
+      <p class="welcome-review-context">AI-помічник і догляд за довжиною</p>
+    </article>
+    <article class="welcome-review-card">
+      <div class="welcome-stars" aria-label="5 з 5 зірок">★★★★★</div>
+      <p class="welcome-review-text">«Мінімалістичний дизайн, приємні кольори — користуюся щовечора після душу.»</p>
+      <p class="welcome-review-author">Анна</p>
+      <p class="welcome-review-context">Загальний досвід і естетика</p>
+    </article>
+  </div>
+</section>
+
+<div class="welcome-cta-bottom">
+  <p>Готові спробувати?</p>
+  <div class="welcome-cta-stack">
+    <a href="{% url 'register' %}" class="welcome-btn-primary">Створити обліковий запис</a>
+    <a href="{% url 'login' %}" class="welcome-btn-outline">Уже маю акаунт</a>
+  </div>
+</div>
+
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock %}
